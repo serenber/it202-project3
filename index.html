@@ -16,10 +16,13 @@
         var myGamePiece;
         var harmObjects = []; // so we can have multiple harm objects in the game
         var theScore;
+        var theLives;
+        var lives = 3;
 
         function startGame() {
             myGamePiece = new component(30, 30, "green", 10, 120); //create the player
             theScore = new component("30px", "Consolas", "white", 280, 40, "text"); // initialize the score
+            theLives = new component("30px", "Consolas", "white", 40, 40, "text"); // initialize the lives
             myGameArea.start();
         }
         var myGameArea = {
@@ -91,12 +94,18 @@
                 var x, y;
                 for(i = 0; i < harmObjects.length; i += 1) {
                     if(myGamePiece.crashWith(harmObjects[i])) { // see if we crashed into a harm object
-                        ctx = myGameArea.context;
-                        ctx.font = "30px Arial";
-                        ctx.fillStyle = "white";
-                        ctx.fillText("Game Over", 160, 135);
-                        myGameArea.stop();
-                        return;
+                        harmObjects[i].x = 480;
+                        lives = lives - 1;
+                        theLives.text = "Lives: " + lives; // it's a feature
+                        theLives.update();
+                        if(lives == 0) {
+                            ctx = myGameArea.context;
+                            ctx.font = "30px Arial";
+                            ctx.fillStyle = "white";
+                            ctx.fillText("Game Over", 160, 135);
+                            myGameArea.stop();
+                            return;
+                        }
                     }
                 }
                 myGameArea.clear();
@@ -130,6 +139,9 @@
                 //update the score
                 theScore.text = "SCORE: " + myGameArea.frameNo;
                 theScore.update();
+                //update the lives
+                theLives.text = "Lives: " + lives;
+                theLives.update();
             }
 
             function everyinterval(n) {

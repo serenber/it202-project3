@@ -14,14 +14,12 @@
 <body onload="startGame()">
     <script>
         var myGamePiece;
+        var harmObjects = []; // so we can have multiple harm objects in the game
 
         function startGame() {
-            myGameArea.start(); //create the canvas
             myGamePiece = new component(30, 30, "green", 10, 120); //create the player
-            redGamePiece = new component(30, 30, "red", 480, 0); // create the harm object
-            yellowGamePiece = new component(30, 30, "yellow", 480, 60); // create the benefit object
+            myGameArea.start();
         }
-         //these are acting as constructors for the canvas and the player piece
         var myGameArea = {
             canvas: document.createElement("canvas"),
             start: function() {
@@ -29,6 +27,7 @@
                 this.canvas.height = 270;
                 this.context = this.canvas.getContext("2d");
                 document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.frameNo = 0;
                 this.interval = setInterval(updateGameArea, 20); //update the frames to create the animation
                 window.addEventListener('keydown', function(e) { // check for keyboard presses
                     myGameArea.key = e.keyCode;
@@ -80,60 +79,56 @@
             }
 
             function updateGameArea() {
-                if(myGamePiece.crashWith(redGamePiece)) { // see if we crshed into a harm object
-                    ctx = myGameArea.context;
-                    ctx.font = "30px Arial";
-                    ctx.fillStyle = "white";
-                    ctx.fillText("Game Over", 160, 135);
-                    myGameArea.stop();
-                } else {
-                    myGameArea.clear();
-                    if(redGamePiece.x == 0) { // to loop if we reach the end of the canvas
-                        redGamePiece.x = 480
-                    } else {
-                        redGamePiece.x -= 1;
+                var x, y;
+                for(i = 0; i < harmObjects.length; i += 1) {
+                    if(myGamePiece.crashWith(harmObjects[i])) { // see if we crashed into a harm object
+                        ctx = myGameArea.context;
+                        ctx.font = "30px Arial";
+                        ctx.fillStyle = "white";
+                        ctx.fillText("Game Over", 160, 135);
+                        myGameArea.stop();
+                        return;
                     }
-                    if(yellowGamePiece.x == 0) {
-                        yellowGamePiece.x = 480
-                    } else {
-                        yellowGamePiece.x -= 1;
-                    }
-                    //update the player based on keyboard presses
-                    myGamePiece.speedX = 0;
-                    myGamePiece.speedY = 0;
-                    if(myGameArea.key && myGameArea.key == 37) {
-                        myGamePiece.speedX = -1;
-                    }
-                    if(myGameArea.key && myGameArea.key == 39) {
-                        myGamePiece.speedX = 1;
-                    }
-                    if(myGameArea.key && myGameArea.key == 38) {
-                        myGamePiece.speedY = -1;
-                    }
-                    if(myGameArea.key && myGameArea.key == 40) {
-                        myGamePiece.speedY = 1;
-                    }
-                    //update all the pieces
-                    myGamePiece.newPos();
-                    myGamePiece.update();
-                    redGamePiece.update();
-                    yellowGamePiece.update();
                 }
-            }
-
-            function moveleft() {
-                myGamePiece.speedX -= 1;
-            }
-
-            function moveright() {
-                myGamePiece.speedX += 1;
-            }
-
-            function stopMove() {
+                myGameArea.clear();
+                myGameArea.frameNo += 1;
+                if(myGameArea.frameNo == 1 || everyinterval(150)) {
+                    //create a new harm object and place it randomly
+                    harmObjects.push(new component(30, 30, "red", 480, Math.floor(Math.random() * 270) + 1));
+                }
+                //update all the harm objects
+                for(i = 0; i < harmObjects.length; i += 1) {
+                    harmObjects[i].x += -1;
+                    harmObjects[i].update();
+                }
+                //update the player based on keyboard presses
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0;
+                if(myGameArea.key && myGameArea.key == 37) {
+                    myGamePiece.speedX = -1;
+                }
+                if(myGameArea.key && myGameArea.key == 39) {
+                    myGamePiece.speedX = 1;
+                }
+                if(myGameArea.key && myGameArea.key == 38) {
+                    myGamePiece.speedY = -1;
+                }
+                if(myGameArea.key && myGameArea.key == 40) {
+                    myGamePiece.speedY = 1;
+                }
+                myGamePiece.newPos();
+                myGamePiece.update();
+            }
+
+            function everyinterval(n) {
+                if((myGameArea.frameNo / n) % 1 == 0) {
+                    return true;
+                }
+                return false;
             }
     </script>
+
+    <p>Here comes a new obstacle at every 150. frame, and we have 50 frames per second, so one obstacle every third second!</p>
 
 </body>
 

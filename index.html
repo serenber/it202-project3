@@ -15,13 +15,16 @@
     <script>
         var myGamePiece;
         var harmObjects = []; // so we can have multiple harm objects in the game
+        var benefitObjects = []; // so we can have multiple harm objects in the game
         var theScore;
+        var benefitCollisions = 0;  //keeo track of the number of times the player collides with the benefit objects
         var theLives;
         var lives = 3;
         var theLevel;
         var level = 1;
         var interval = 150;
         var harmSpeed = 1;
+        var playerSpeed = 1;
 
         function startGame() {
             myGamePiece = new component(30, 30, "green", 10, 120); //create the player
@@ -97,7 +100,6 @@
 
             function updateGameArea() {
                 var x, y;
-//  this increases too frequently, check the math
                 if(myGameArea.frameNo % 100 == 0 && myGameArea.frameNo != 0){ // increase the level and speed of the harm objects
                     level += 1;
                     harmSpeed += 1;
@@ -105,9 +107,13 @@
                 if(myGameArea.frameNo % 1000 == 0){ // increase the frequency of the harm objects
                     interval -= 10;
                 }
+                if(level % 10 == 0){ // increase the player speed per 10 levels
+                    playerSpeed += 0.05;
+                }
                 for(i = 0; i < harmObjects.length; i += 1) {
                     if(myGamePiece.crashWith(harmObjects[i])) { // see if we crashed into a harm object
                         harmObjects[i].x = 480;
+                        harmObjects[i].y = Math.floor(Math.random() * 270) + 1
                         lives = lives - 1;
                         theLives.text = "Lives: " + lives; // it's a feature
                         theLives.update();
@@ -121,6 +127,14 @@
                         }
                     }
                 }
+                for(i = 0; i < benefitObjects.length; i += 1) {
+                    if(myGamePiece.crashWith(benefitObjects[i])) { // see if we crashed into a benefit object
+                        benefitObjects[i].x = 480;
+                        benefitObjects[i].y = Math.floor(Math.random() * 270) + 1;
+                        //add to the score
+                        benefitCollisions += 1;
+                    }
+                }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
                 if(myGameArea.frameNo == 1 || everyinterval(interval)) {
@@ -132,25 +146,34 @@
                     harmObjects[i].x -= (harmSpeed);
                     harmObjects[i].update();
                 }
+                if(myGameArea.frameNo == 1 || everyinterval(interval)) {
+                    //create a new benefit object and place it randomly
+                    benefitObjects.push(new component(30, 30, "yellow", 480, Math.floor(Math.random() * 270) + 1));
+                }
+                //update all the benefit objects
+                for(i = 0; i < benefitObjects.length; i += 1) {
+                    benefitObjects[i].x -= (harmSpeed);
+                    benefitObjects[i].update();
+                }
                 //update the player based on keyboard presses
                 myGamePiece.speedX = 0;
                 myGamePiece.speedY = 0;
                 if(myGameArea.key && myGameArea.key == 37) {
-                    myGamePiece.speedX = -1;
+                    myGamePiece.speedX = -playerSpeed;
                 }
                 if(myGameArea.key && myGameArea.key == 39) {
-                    myGamePiece.speedX = 1;
+                    myGamePiece.speedX = playerSpeed;
                 }
                 if(myGameArea.key && myGameArea.key == 38) {
-                    myGamePiece.speedY = -1;
+                    myGamePiece.speedY = -playerSpeed;
                 }
                 if(myGameArea.key && myGameArea.key == 40) {
-                    myGamePiece.speedY = 1;
+                    myGamePiece.speedY = playerSpeed;
                 }
                 myGamePiece.newPos();
                 myGamePiece.update();
                 //update the score
-                theScore.text = "Score: " + myGameArea.frameNo;
+                theScore.text = "Score: " + (myGameArea.frameNo + (benefitCollisions * 370));  //Credit: Evelyn decided the point value
                 theScore.update();
                 //update the lives
                 theLives.text = "Lives: " + lives;

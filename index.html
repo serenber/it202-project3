@@ -17,7 +17,9 @@
 
         function startGame() {
             myGameArea.start(); //create the canvas
-            myGamePiece = new component(30, 30, "red", 10, 120); //create the user
+            myGamePiece = new component(30, 30, "green", 10, 120); //create the player
+            redGamePiece = new component(30, 30, "red", 480, 0); // create the harm object
+            yellowGamePiece = new component(30, 30, "yellow", 480, 60); // create the benefit object
         }
          //these are acting as constructors for the canvas and the player piece
         var myGameArea = {
@@ -33,6 +35,7 @@
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             }
         }
+         // x, y are the starting location of the piece
 
             function component(width, height, color, x, y) {
                 this.width = width;
@@ -49,7 +52,11 @@
             function updateGameArea() {
                 myGameArea.clear();
                 myGamePiece.x += 1; //to test that the animation is working
+                redGamePiece.x -= 1;
+                yellowGamePiece.x -= 1;
                 myGamePiece.update();
+                redGamePiece.update();
+                yellowGamePiece.update();
             }
     </script>
 

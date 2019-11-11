@@ -1,34 +1,60 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    border: 1px solid #d3d3d3;
-    background-color: #081270;
-}
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        canvas {
+            border:1px solid #d3d3d3;
+            background-color: #081270;
+        }
+    </style>
 </head>
+
 <body onload="startGame()">
-<script>
+    <script>
+        var myGamePiece;
 
-function startGame() {
-    myGameArea.start();
-}
+        function startGame() {
+            myGameArea.start(); //create the canvas
+            myGamePiece = new component(30, 30, "red", 10, 120); //create the user
+        }
+         //these are acting as constructors for the canvas and the player piece
+        var myGameArea = {
+            canvas: document.createElement("canvas"),
+            start: function() {
+                this.canvas.width = 480;
+                this.canvas.height = 270;
+                this.context = this.canvas.getContext("2d");
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.interval = setInterval(updateGameArea, 20); //update the frames to create the animation
+            },
+            clear: function() { // this function clears the canvas
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        }
 
-var myGameArea = {
-    canvas : document.createElement("canvas"),
-    start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
-        this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-    }
-}
+            function component(width, height, color, x, y) {
+                this.width = width;
+                this.height = height;
+                this.x = x;
+                this.y = y;
+                this.update = function() { //this allows the component to be redrawn
+                    ctx = myGameArea.context;
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
 
-</script>
+            function updateGameArea() {
+                myGameArea.clear();
+                myGamePiece.x += 1; //to test that the animation is working
+                myGamePiece.update();
+            }
+    </script>
 
-<p>We have created a game area! (or at least an empty canvas)</p>
+    <p>We have added a component to our game, a red square!</p>
 
 </body>
+
 </html>

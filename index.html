@@ -52,8 +52,21 @@
             function updateGameArea() {
                 myGameArea.clear();
                 myGamePiece.x += 1; //to test that the animation is working
-                redGamePiece.x -= 1;
-                yellowGamePiece.x -= 1;
+                
+                if (redGamePiece.x == 0){  // to loop if we reach the end of the canvas
+                    redGamePiece.x = 480
+                }
+                else{
+                    redGamePiece.x -= 1;
+                }
+                
+                if (yellowGamePiece.x == 0){
+                    yellowGamePiece.x = 480
+                }
+                else{
+                    yellowGamePiece.x -= 1;
+                }
+                
                 myGamePiece.update();
                 redGamePiece.update();
                 yellowGamePiece.update();

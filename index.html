@@ -27,7 +27,7 @@
         var playerSpeed = 1;
 
         function startGame() {
-            myGamePiece = new component(30, 30, "green", 10, 120); //create the player
+            myGamePiece = new component(30, 30, "player.png", 10, 120, "image" ); //create the player
             theScore = new component("30px", "Consolas", "white", 280, 40, "text"); // initialize the score
             theLives = new component("30px", "Consolas", "white", 40, 40, "text"); // initialize the lives
             theLevel = new component("30px", "Consolas", "white", 160, 40, "text"); // initialize the level
@@ -60,6 +60,10 @@
 
             function component(width, height, color, x, y, type) {
                 this.type = type;
+                if (type == "image") {
+    this.image = new Image();
+    this.image.src = color;
+  }
                 this.width = width;
                 this.height = height;
                 this.speedX = 0;
@@ -68,7 +72,12 @@
                 this.y = y;
                 this.update = function() { //this allows the component to be redrawn
                     ctx = myGameArea.context;
-                    if(this.type == "text") {
+                    if (type == "image") {
+      ctx.drawImage(this.image,
+        this.x,
+        this.y,
+        this.width, this.height);
+    } else if(this.type == "text") {
                         ctx.font = this.width + " " + this.height;
                         ctx.fillStyle = color;
                         ctx.fillText(this.text, this.x, this.y);
@@ -139,7 +148,9 @@
                 myGameArea.frameNo += 1;
                 if(myGameArea.frameNo == 1 || everyinterval(interval)) {
                     //create a new harm object and place it randomly
-                    harmObjects.push(new component(30, 30, "red", 480, Math.floor(Math.random() * 270) + 1));
+                    var harmX = 480;
+                    var harmY = Math.floor(Math.random() * 270) + 1;
+                    harmObjects.push(new component(30, 30, "harm.png", harmX, harmY, "image"));
                 }
                 //update all the harm objects
                 for(i = 0; i < harmObjects.length; i += 1) {
@@ -148,7 +159,9 @@
                 }
                 if(myGameArea.frameNo == 1 || everyinterval(interval)) {
                     //create a new benefit object and place it randomly
-                    benefitObjects.push(new component(30, 30, "yellow", 480, Math.floor(Math.random() * 270) + 1));
+                    var benefitX = 480;
+                    var benefitY = Math.floor(Math.random() * 270) + 1;
+                    benefitObjects.push(new component(30, 30, "benefit.png", benefitX, benefitY, "image"));
                 }
                 //update all the benefit objects
                 for(i = 0; i < benefitObjects.length; i += 1) {

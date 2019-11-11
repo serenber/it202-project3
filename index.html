@@ -18,11 +18,16 @@
         var theScore;
         var theLives;
         var lives = 3;
+        var theLevel;
+        var level = 1;
+        var interval = 150;
+        var harmSpeed = 1;
 
         function startGame() {
             myGamePiece = new component(30, 30, "green", 10, 120); //create the player
             theScore = new component("30px", "Consolas", "white", 280, 40, "text"); // initialize the score
             theLives = new component("30px", "Consolas", "white", 40, 40, "text"); // initialize the lives
+            theLevel = new component("30px", "Consolas", "white", 160, 40, "text"); // initialize the level
             myGameArea.start();
         }
         var myGameArea = {
@@ -92,6 +97,10 @@
 
             function updateGameArea() {
                 var x, y;
+                if(myGameArea.frameNo == 1000){
+                    level += 1;
+                    harmSpeed += 1;
+                }
                 for(i = 0; i < harmObjects.length; i += 1) {
                     if(myGamePiece.crashWith(harmObjects[i])) { // see if we crashed into a harm object
                         harmObjects[i].x = 480;
@@ -110,13 +119,13 @@
                 }
                 myGameArea.clear();
                 myGameArea.frameNo += 1;
-                if(myGameArea.frameNo == 1 || everyinterval(150)) {
+                if(myGameArea.frameNo == 1 || everyinterval(interval)) {
                     //create a new harm object and place it randomly
                     harmObjects.push(new component(30, 30, "red", 480, Math.floor(Math.random() * 270) + 1));
                 }
                 //update all the harm objects
                 for(i = 0; i < harmObjects.length; i += 1) {
-                    harmObjects[i].x += -1;
+                    harmObjects[i].x -= (harmSpeed);
                     harmObjects[i].update();
                 }
                 //update the player based on keyboard presses
@@ -137,11 +146,14 @@
                 myGamePiece.newPos();
                 myGamePiece.update();
                 //update the score
-                theScore.text = "SCORE: " + myGameArea.frameNo;
+                theScore.text = "Score: " + myGameArea.frameNo;
                 theScore.update();
                 //update the lives
                 theLives.text = "Lives: " + lives;
                 theLives.update();
+                //update the lives
+                theLevel.text = "Level: " + level;
+                theLevel.update();
             }
 
             function everyinterval(n) {
@@ -151,8 +163,6 @@
                 return false;
             }
     </script>
-
-    <p>Here comes a new obstacle at every 150. frame, and we have 50 frames per second, so one obstacle every third second!</p>
 
 </body>
 

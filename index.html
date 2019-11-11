@@ -15,9 +15,11 @@
     <script>
         var myGamePiece;
         var harmObjects = []; // so we can have multiple harm objects in the game
+        var theScore;
 
         function startGame() {
             myGamePiece = new component(30, 30, "green", 10, 120); //create the player
+            theScore = new component("30px", "Consolas", "white", 280, 40, "text"); // initialize the score
             myGameArea.start();
         }
         var myGameArea = {
@@ -45,7 +47,8 @@
         }
          // x, y are the starting location of the piece
 
-            function component(width, height, color, x, y) {
+            function component(width, height, color, x, y, type) {
+                this.type = type;
                 this.width = width;
                 this.height = height;
                 this.speedX = 0;
@@ -54,8 +57,14 @@
                 this.y = y;
                 this.update = function() { //this allows the component to be redrawn
                     ctx = myGameArea.context;
-                    ctx.fillStyle = color;
-                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                    if(this.type == "text") {
+                        ctx.font = this.width + " " + this.height;
+                        ctx.fillStyle = color;
+                        ctx.fillText(this.text, this.x, this.y);
+                    } else {
+                        ctx.fillStyle = color;
+                        ctx.fillRect(this.x, this.y, this.width, this.height);
+                    }
                 }
                 this.newPos = function() {
                     this.x += this.speedX;
@@ -118,6 +127,9 @@
                 }
                 myGamePiece.newPos();
                 myGamePiece.update();
+                //update the score
+                theScore.text = "SCORE: " + myGameArea.frameNo;
+                theScore.update();
             }
 
             function everyinterval(n) {

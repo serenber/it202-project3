@@ -39,6 +39,9 @@
             },
             clear: function() { // this function clears the canvas
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            stop: function() {
+                clearInterval(this.interval);
             }
         }
          // x, y are the starting location of the piece
@@ -59,44 +62,63 @@
                     this.x += this.speedX;
                     this.y += this.speedY;
                 }
+                this.crashWith = function(otherobj) {
+                    var myleft = this.x;
+                    var myright = this.x + (this.width);
+                    var mytop = this.y;
+                    var mybottom = this.y + (this.height);
+                    var otherleft = otherobj.x;
+                    var otherright = otherobj.x + (otherobj.width);
+                    var othertop = otherobj.y;
+                    var otherbottom = otherobj.y + (otherobj.height);
+                    var crash = true;
+                    if((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                        crash = false;
+                    }
+                    return crash;
+                }
             }
 
             function updateGameArea() {
-                myGameArea.clear();
-                
-                if(redGamePiece.x == 0) { // to loop if we reach the end of the canvas
-                    redGamePiece.x = 480
+                if(myGamePiece.crashWith(redGamePiece)) { // see if we crshed into a harm object
+                    ctx = myGameArea.context;
+                    ctx.font = "30px Arial";
+                    ctx.fillStyle = "white";
+                    ctx.fillText("Game Over", 160, 135);
+                    myGameArea.stop();
                 } else {
-                    redGamePiece.x -= 1;
+                    myGameArea.clear();
+                    if(redGamePiece.x == 0) { // to loop if we reach the end of the canvas
+                        redGamePiece.x = 480
+                    } else {
+                        redGamePiece.x -= 1;
+                    }
+                    if(yellowGamePiece.x == 0) {
+                        yellowGamePiece.x = 480
+                    } else {
+                        yellowGamePiece.x -= 1;
+                    }
+                    //update the player based on keyboard presses
+                    myGamePiece.speedX = 0;
+                    myGamePiece.speedY = 0;
+                    if(myGameArea.key && myGameArea.key == 37) {
+                        myGamePiece.speedX = -1;
+                    }
+                    if(myGameArea.key && myGameArea.key == 39) {
+                        myGamePiece.speedX = 1;
+                    }
+                    if(myGameArea.key && myGameArea.key == 38) {
+                        myGamePiece.speedY = -1;
+                    }
+                    if(myGameArea.key && myGameArea.key == 40) {
+                        myGamePiece.speedY = 1;
+                    }
+                    //update all the pieces
+                    myGamePiece.newPos();
+                    myGamePiece.update();
+                    redGamePiece.update();
+                    yellowGamePiece.update();
                 }
-                if(yellowGamePiece.x == 0) {
-                    yellowGamePiece.x = 480
-                } else {
-                    yellowGamePiece.x -= 1;
-                }
-                
-                //update the player based on keyboard presses
-                myGamePiece.speedX = 0;
-                myGamePiece.speedY = 0;
-                if(myGameArea.key && myGameArea.key == 37) {
-                    myGamePiece.speedX = -1;
-                }
-                if(myGameArea.key && myGameArea.key == 39) {
-                    myGamePiece.speedX = 1;
-                }
-                if(myGameArea.key && myGameArea.key == 38) {
-                    myGamePiece.speedY = -1;
-                }
-                if(myGameArea.key && myGameArea.key == 40) {
-                    myGamePiece.speedY = 1;
-                }
-                
-                //update all the pieces
-                myGamePiece.newPos();
-                myGamePiece.update();
-                
-                redGamePiece.update();
-                yellowGamePiece.update();
             }
 
             function moveleft() {

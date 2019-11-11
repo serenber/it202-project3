@@ -97,9 +97,13 @@
 
             function updateGameArea() {
                 var x, y;
-                if(myGameArea.frameNo == 1000){
+//  this increases too frequently, check the math
+                if(myGameArea.frameNo % 100 == 0 && myGameArea.frameNo != 0){ // increase the level and speed of the harm objects
                     level += 1;
                     harmSpeed += 1;
+                }
+                if(myGameArea.frameNo % 1000 == 0){ // increase the frequency of the harm objects
+                    interval -= 10;
                 }
                 for(i = 0; i < harmObjects.length; i += 1) {
                     if(myGamePiece.crashWith(harmObjects[i])) { // see if we crashed into a harm object

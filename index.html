@@ -111,16 +111,32 @@
                 }
             }
 
+        var frameCount;
+        
             function updateGameArea() {
+                if(lives == 0) {
+                            ctx = myGameArea.context;
+                            ctx.font = "30px Arial";
+                            ctx.fillStyle = "white";
+                            ctx.fillText("Game Over", 450, 350);
+                            myGameArea.stop();
+                            return;
+                        }
+                frameCount++;
+                if(frameCount < 150){
+                    window.requestAnimationFrame(updateGameArea)
+                    return;
+                }
+                frameCount = 0;
                 var x, y;
-                if(myGameArea.frameNo % 100 == 0 && myGameArea.frameNo != 0){ // increase the level and speed of the harm objects
+                if(myGameArea.frameNo % 1000 == 0 && myGameArea.frameNo != 0){ // increase the level and speed of the harm objects
                     level += 1;
                     harmSpeed += 1;
                 }
-                if(myGameArea.frameNo % 1000 == 0){ // increase the frequency of the harm objects
+                if(myGameArea.frameNo % 10000 == 0){ // increase the frequency of the harm objects
                     interval -= 10;
                 }
-                if(level % 10 == 0){ // increase the player speed per 10 levels
+                if(level % 100 == 0){ // increase the player speed per 10 levels
                     playerSpeed += 0.05;
                 }
                 for(i = 0; i < harmObjects.length; i += 1) {
@@ -201,6 +217,8 @@
                 //update the lives
                 theLevel.text = "Level: " + level;
                 theLevel.update();
+                
+                window.requestAnimationFrame(updateGameArea)
             }
 
             function everyinterval(n) {

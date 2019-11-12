@@ -34,7 +34,7 @@
             theBackground = new component(1024, 699, "background.jpg", 0, 0, "image");  // create the background
             theScore = new component("30px", "Consolas", "white", 800, 40, "text"); // initialize the score
             theLives = new component("30px", "Consolas", "white", 86, 40, "text"); // initialize the lives
-            theLevel = new component("30px", "Consolas", "white", 400, 40, "text"); // initialize the level
+            theLevel = new component("30px", "Consolas", "white", 450, 40, "text"); // initialize the level
             myGameArea.start();
         }
         var myGameArea = {
@@ -134,7 +134,7 @@
                             ctx = myGameArea.context;
                             ctx.font = "30px Arial";
                             ctx.fillStyle = "white";
-                            ctx.fillText("Game Over", 160, 135);
+                            ctx.fillText("Game Over", 450, 350);
                             myGameArea.stop();
                             return;
                         }
@@ -210,7 +210,6 @@
                 return false;
             }
     </script>
-
 </body>
 
 </html>

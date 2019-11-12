@@ -14,6 +14,7 @@
 <body onload="startGame()">
     <script>
         var myGamePiece;
+        var theBackground;
         var harmObjects = []; // so we can have multiple harm objects in the game
         var benefitObjects = []; // so we can have multiple harm objects in the game
         var theScore;
@@ -28,6 +29,7 @@
 
         function startGame() {
             myGamePiece = new component(30, 30, "player.png", 10, 120, "image" ); //create the player
+            theBackground = new component(656, 270, "background.jpg", 0, 0, "image");  // create the background
             theScore = new component("30px", "Consolas", "white", 280, 40, "text"); // initialize the score
             theLives = new component("30px", "Consolas", "white", 40, 40, "text"); // initialize the lives
             theLevel = new component("30px", "Consolas", "white", 160, 40, "text"); // initialize the level
@@ -145,6 +147,9 @@
                     }
                 }
                 myGameArea.clear();
+                //update the background
+                theBackground.newPos();
+  theBackground.update();
                 myGameArea.frameNo += 1;
                 if(myGameArea.frameNo == 1 || everyinterval(interval)) {
                     //create a new harm object and place it randomly

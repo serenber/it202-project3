@@ -15,6 +15,8 @@
     <script>
         var myGamePiece;
         var theBackground;
+        var backWidth = 1024;
+        var backHeight = 699;
         var harmObjects = []; // so we can have multiple harm objects in the game
         var benefitObjects = []; // so we can have multiple harm objects in the game
         var theScore;
@@ -28,18 +30,18 @@
         var playerSpeed = 1;
 
         function startGame() {
-            myGamePiece = new component(30, 30, "player.png", 10, 120, "image" ); //create the player
-            theBackground = new component(656, 270, "background.jpg", 0, 0, "image");  // create the background
-            theScore = new component("30px", "Consolas", "white", 280, 40, "text"); // initialize the score
-            theLives = new component("30px", "Consolas", "white", 40, 40, "text"); // initialize the lives
-            theLevel = new component("30px", "Consolas", "white", 160, 40, "text"); // initialize the level
+            myGamePiece = new component(60, 60, "player.png", 10, 120, "image" ); //create the player
+            theBackground = new component(1024, 699, "background.jpg", 0, 0, "image");  // create the background
+            theScore = new component("30px", "Consolas", "white", 800, 40, "text"); // initialize the score
+            theLives = new component("30px", "Consolas", "white", 86, 40, "text"); // initialize the lives
+            theLevel = new component("30px", "Consolas", "white", 400, 40, "text"); // initialize the level
             myGameArea.start();
         }
         var myGameArea = {
             canvas: document.createElement("canvas"),
             start: function() {
-                this.canvas.width = 480;
-                this.canvas.height = 270;
+                this.canvas.width = backWidth;
+                this.canvas.height = backHeight;
                 this.context = this.canvas.getContext("2d");
                 document.body.insertBefore(this.canvas, document.body.childNodes[0]);
                 this.frameNo = 0;
@@ -123,8 +125,8 @@
                 }
                 for(i = 0; i < harmObjects.length; i += 1) {
                     if(myGamePiece.crashWith(harmObjects[i])) { // see if we crashed into a harm object
-                        harmObjects[i].x = 480;
-                        harmObjects[i].y = Math.floor(Math.random() * 270) + 1
+                        harmObjects[i].x = backWidth;
+                        harmObjects[i].y = Math.floor(Math.random() * backHeight) + 1
                         lives = lives - 1;
                         theLives.text = "Lives: " + lives; // it's a feature
                         theLives.update();
@@ -140,8 +142,8 @@
                 }
                 for(i = 0; i < benefitObjects.length; i += 1) {
                     if(myGamePiece.crashWith(benefitObjects[i])) { // see if we crashed into a benefit object
-                        benefitObjects[i].x = 480;
-                        benefitObjects[i].y = Math.floor(Math.random() * 270) + 1;
+                        benefitObjects[i].x = backWidth;
+                        benefitObjects[i].y = Math.floor(Math.random() * backHeight) + 1;
                         //add to the score
                         benefitCollisions += 1;
                     }
@@ -153,9 +155,9 @@
                 myGameArea.frameNo += 1;
                 if(myGameArea.frameNo == 1 || everyinterval(interval)) {
                     //create a new harm object and place it randomly
-                    var harmX = 480;
-                    var harmY = Math.floor(Math.random() * 270) + 1;
-                    harmObjects.push(new component(30, 30, "harm.png", harmX, harmY, "image"));
+                    var harmX = backWidth;
+                    var harmY = Math.floor(Math.random() * backHeight) + 1;
+                    harmObjects.push(new component(60, 50, "harm.png", harmX, harmY, "image"));
                 }
                 //update all the harm objects
                 for(i = 0; i < harmObjects.length; i += 1) {
@@ -164,9 +166,9 @@
                 }
                 if(myGameArea.frameNo == 1 || everyinterval(interval)) {
                     //create a new benefit object and place it randomly
-                    var benefitX = 480;
-                    var benefitY = Math.floor(Math.random() * 270) + 1;
-                    benefitObjects.push(new component(30, 30, "benefit.png", benefitX, benefitY, "image"));
+                    var benefitX = backWidth;
+                    var benefitY = Math.floor(Math.random() * backHeight) + 1;
+                    benefitObjects.push(new component(50, 60, "benefit.png", benefitX, benefitY, "image"));
                 }
                 //update all the benefit objects
                 for(i = 0; i < benefitObjects.length; i += 1) {

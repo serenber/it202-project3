@@ -93,6 +93,21 @@
                 this.newPos = function() {
                     this.x += this.speedX;
                     this.y += this.speedY;
+                    //check that we're within the bounds of the canvas
+                    if(this.x < 0){  //top of the canvas
+                        this.x = 0
+                    }
+                    if(this.y < 0){  //left of the canvas
+                        this.y = 0
+                    }
+                    if(this.y > backHeight - this.height){  //bottom of the canvas
+                        this.y = backHeight - this.height;
+                    }
+                    
+                    if(this.x > backWidth - this.width){  //right of the canvas
+                        this.x = backWidth - this.width;
+                    }
+                    
                 }
                 this.crashWith = function(otherobj) {
                     var myleft = this.x;
